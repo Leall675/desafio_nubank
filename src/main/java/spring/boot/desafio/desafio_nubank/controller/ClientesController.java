@@ -42,6 +42,10 @@ public class ClientesController {
 
     @GetMapping
     public ResponseEntity<List<ClientesResponseDto>> listarClientes() {
+        List<ClientesResponseDto> clientes = clientesService.listarTodos();
+        if (clientes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
         return ResponseEntity.ok(clientesService.listarTodos());
     }
 
