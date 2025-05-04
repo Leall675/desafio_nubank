@@ -16,7 +16,7 @@ import spring.boot.desafio.desafio_nubank.repository.ContatosRepository;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/contato")
+@RequestMapping("/api/v1/contatos")
 public class ContatoController {
 
     @Autowired
