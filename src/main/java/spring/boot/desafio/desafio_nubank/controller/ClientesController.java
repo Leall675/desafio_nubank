@@ -39,6 +39,9 @@ public class ClientesController {
             return ResponseEntity.ok(Collections.singletonList(cliente));
         }
         List<ClientesResponseDto> clientes = clientesService.listarTodos();
+        if (clientes.isEmpty()) {
+            return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.emptyList());
+        }
         return ResponseEntity.ok(clientes);
     }
 
