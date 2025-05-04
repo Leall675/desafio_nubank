@@ -6,4 +6,5 @@ import spring.boot.desafio.desafio_nubank.model.Clientes;
 
 @Repository
 public interface ClientesRepository extends JpaRepository<Clientes, Long> {
+    public Clientes findByCpf(String cpf);
 }
