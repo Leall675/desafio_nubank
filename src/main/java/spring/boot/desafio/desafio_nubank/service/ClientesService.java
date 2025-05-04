@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import spring.boot.desafio.desafio_nubank.dto.ClientesDto;
 import spring.boot.desafio.desafio_nubank.dto.ClientesResponseDto;
 import spring.boot.desafio.desafio_nubank.dto.ContatoResponseDto;
+import spring.boot.desafio.desafio_nubank.exceptions.ClientNotFoundException;
 import spring.boot.desafio.desafio_nubank.model.Clientes;
 import spring.boot.desafio.desafio_nubank.model.Contatos;
 import spring.boot.desafio.desafio_nubank.repository.ClientesRepository;
@@ -24,7 +25,6 @@ public class ClientesService {
 
         if (dto.getContatos() != null && !dto.getContatos().isEmpty()) {
             List<Contatos> contatos = dto.getContatos().stream().map(c -> {
-                System.out.println("Criando contato: telefone=" + c.getTelefone() + ", email=" + c.getEmail());
                 Contatos contato = new Contatos();
                 contato.setTelefone(c.getTelefone());
                 contato.setEmail(c.getEmail());
@@ -33,14 +33,11 @@ public class ClientesService {
             }).collect(Collectors.toList());
             clientes.setContatos(contatos);
         }
-
-        System.out.println("Cliente a ser salvo: " + clientes);
         return clientesRepository.save(clientes);
     }
 
     public List<ClientesResponseDto> listarTodos() {
         List<Clientes> clientes = clientesRepository.findAll();
-        System.out.println("clientes: " + clientes);
         return clientes.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
@@ -48,13 +45,21 @@ public class ClientesService {
 
     public ClientesResponseDto buscarClientePorID(Long id) {
         Clientes clientes = clientesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ClientNotFoundException("Nenhum cliente encontrado para o ID informado"));
         return toDto(clientes);
+    }
+
+    public ClientesResponseDto buscarClientePorCpf(String cpf) {
+        Clientes cliente = clientesRepository.findByCpf(cpf);
+        if (cliente == null) {
+            throw new ClientNotFoundException("Nenhum cliente encontrado para o CPF informado");
+        }
+        return toDto(cliente);
     }
 
     public List<ContatoResponseDto> listarContatosPorCliente(Long id) {
         Clientes cliente = clientesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ClientNotFoundException("Nenhum cliente encontrado para o ID informado"));
 
         return cliente.getContatos().stream()
                 .map(c -> {
