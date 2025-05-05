@@ -1,5 +1,6 @@
 package spring.boot.desafio.desafio_nubank.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,7 @@ public class Contatos {
 
     @ManyToOne()
     @JoinColumn(name = "clientes_id")
+    @JsonBackReference
     private Clientes clientes;
 
     public Contatos() {
