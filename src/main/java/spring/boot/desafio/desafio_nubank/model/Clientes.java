@@ -19,6 +19,7 @@ public class Clientes {
     private String name;
     private String cpf;
     @OneToMany(mappedBy = "clientes", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Contatos> contatos = new ArrayList<Contatos>();
 
 
